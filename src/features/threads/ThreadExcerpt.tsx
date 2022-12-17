@@ -1,24 +1,53 @@
-import { Avatar, Card, CardActionArea, CardActions, CardContent, CardHeader, Chip, IconButton, Stack, Tooltip } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardHeader,
+  CardMedia,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Stack,
+  Tooltip,
+} from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectUsername } from "../user/userSlice";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { Thread } from "./threadSlice";
+import { deleteThread, Thread } from "./threadSlice";
+import { Box } from "@mui/system";
+import { useState } from "react";
+import { ThreadAdd } from "./ThreadAdd";
+import { useNavigate } from "react-router-dom";
+import { commentsStatusNoted } from "../comments/commentSlice";
 
-export function ThreadExcerpt({ thread }: { thread: Thread }) {
+export function ThreadExcerpt({
+  thread,
+}: {
+  thread: Thread;
+  threadAddOpen?: boolean;
+  setThreadAddOpen?: Function;
+}) {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const currentUser: string = useAppSelector(selectUsername);
   return (
-    <Card
-      key={thread.ID?.toString()}
-      variant="elevation"
-      elevation={10}
-      onClick={() => {
-        console.log("hi");
-      }}
-    >
-      <CardActionArea>
+    <Card key={thread.ID?.toString()} variant="elevation" elevation={10}>
+      <CardActionArea
+        onClick={() => {
+          dispatch(commentsStatusNoted());
+          navigate("/thread/" + thread.ID);
+        }}
+      >
         <Stack direction="row">
           <CardHeader
             avatar={
@@ -28,7 +57,7 @@ export function ThreadExcerpt({ thread }: { thread: Thread }) {
             }
             title={thread.title}
             subheader={thread.CreatedAt}
-          ></CardHeader>
+          />
           <Chip
             label={thread.tag}
             variant="outlined"
@@ -36,22 +65,52 @@ export function ThreadExcerpt({ thread }: { thread: Thread }) {
             sx={{ margin: "20px" }}
           />
         </Stack>
+        {thread.image && (
+          <Box sx={{ height: "300px", width: "400px", marginLeft: "16px" }}>
+            <CardMedia
+              component="img"
+              height="100%"
+              width="100%"
+              image={thread.image}
+              alt="Thread Image"
+            />
+          </Box>
+        )}
         <CardContent>{thread.content}</CardContent>
       </CardActionArea>
       {currentUser === thread.author && (
         <CardActions disableSpacing>
           <Tooltip title="Edit">
-            <IconButton onClick={() => {}} sx={{ marginLeft: "auto" }}>
+            <IconButton
+              onClick={() => {
+                setEditDialogOpen(true);
+              }}
+              sx={{ marginLeft: "auto" }}
+            >
               <EditIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Delete">
-            <IconButton onClick={() => {}}>
+            <IconButton onClick={() => setDeleteDialogOpen(true)}>
               <DeleteIcon />
             </IconButton>
           </Tooltip>
         </CardActions>
       )}
+      <ThreadAdd
+        dialogOpen={editDialogOpen}
+        setDialogOpen={setEditDialogOpen}
+        thread={thread}
+        create={false}
+      />
+      <Dialog open={deleteDialogOpen}>
+        <DialogTitle>Delete this Thread?</DialogTitle>
+        <DialogContent>This cannot be undone.</DialogContent>
+        <DialogActions>
+          <Button variant="contained" sx={{ bgcolor: "#ED4337" }} onClick={() => dispatch(deleteThread(thread))}>Yes</Button>
+          <Button variant="outlined" onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
     </Card>
   );
 }

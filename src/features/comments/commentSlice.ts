@@ -19,7 +19,7 @@ export interface CommentListState {
 
 export const getCommentList = createAsyncThunk(
   "commentList/getCommentList",
-  async (ID: string) => {
+  async (ID: Number) => {
     return await get("/threads/" + ID + "/comments");
   }
 );
@@ -36,7 +36,7 @@ export const deleteComment = createAsyncThunk(
   "comment/deleteComment",
   async (comment: Comment) => {
     return await mdelete(
-      "/threads/" + comment.thread_id + "/comments" + comment.ID
+      "/threads/" + comment.thread_id + "/comments/" + comment.ID
     );
   }
 );
@@ -45,7 +45,7 @@ export const editComment = createAsyncThunk(
   "comment/editComment",
   async (comment: Comment) => {
     return await put(
-      "/threads/" + comment.thread_id + "/comments" + comment.ID,
+      "/threads/" + comment.thread_id + "/comments/" + comment.ID,
       comment
     );
   }
@@ -58,10 +58,13 @@ const initialState: CommentListState = {
   error: null,
 };
 
-const threadSlice = createSlice({
+const commentSlice = createSlice({
   name: "comment",
   initialState: initialState,
-  reducers: {},
+  reducers: {commentsStatusNoted(state) {
+    state.statusGet = "idle"
+    state.statusUpdate = "idle"
+  }},
   extraReducers(builder) {
     builder
       .addCase(getCommentList.pending, (state, action) => {
@@ -130,7 +133,8 @@ const threadSlice = createSlice({
   },
 });
 
-export default threadSlice.reducer;
+export default commentSlice.reducer;
+export const { commentsStatusNoted } = commentSlice.actions
 
 export const selectCommentList = (state: RootState) =>
   state.comment.commentList;

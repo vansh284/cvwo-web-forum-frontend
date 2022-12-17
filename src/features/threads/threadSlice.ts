@@ -9,6 +9,7 @@ export interface Thread {
   CreatedAt?: string;
   tag: string;
   author: string;
+  image: string | null;
 }
 
 export interface ThreadListState {
@@ -36,14 +37,14 @@ export const createThread = createAsyncThunk(
 export const editThread = createAsyncThunk(
   "thread/editThread",
   async (thread: Thread) => {
-    return await put("/threads" + thread.ID, thread);
+    return await put("/threads/" + thread.ID, thread);
   }
 );
 
 export const deleteThread = createAsyncThunk(
   "thread/deleteThread",
   async (thread: Thread) => {
-    return await mdelete("/threads" + thread.ID, thread);
+    return await mdelete("/threads/" + thread.ID, thread);
   }
 );
 
@@ -142,5 +143,5 @@ export const selectThreadByID = (ID: Number) => (state: RootState) => {
   );
   return res
     ? res
-    : { ID: 0, title: "", content: "", tag: "", author: "", CreatedAt: "" };
+    : { ID: 0, title: "", content: "", tag: "", author: "", CreatedAt: "", image: null };
 };

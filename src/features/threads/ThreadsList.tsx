@@ -9,7 +9,7 @@ import {
   threadsErrorNoted,
 } from "./threadSlice";
 
-import { Fab, Tooltip } from "@mui/material";
+import {Fab, Tooltip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Stack from "@mui/system/Stack/Stack";
 import { Box } from "@mui/system";
@@ -20,7 +20,7 @@ import { getUser } from "../user/userSlice";
 export default function ThreadsList() {
   const dispatch = useAppDispatch();
   const navigate: NavigateFunction = useNavigate();
-  const [threadAddOpen, setThreadAddOpen] = useState(false);
+  const [threadAddDialogOpen, setThreadAddDialogOpen] = useState(false);
   const threadList: Thread[] = useAppSelector(selectThreadList);
   const threadsStatus: string = useAppSelector(
     (state: RootState) => state.thread.statusGet
@@ -30,46 +30,58 @@ export default function ThreadsList() {
   );
   //Log user in
   useEffect(() => {
-    dispatch(getUser())
+    dispatch(getUser());
   });
 
-  //Autodirect users not logged in to the home page
+  // Autodirect users not logged in to the home page
   useEffect(() => {
     if (threadsError !== null) {
       navigate("/", { replace: true });
       dispatch(threadsErrorNoted());
     }
-  }, [threadsError]);
+  });
 
   //Get the threads
   useEffect(() => {
-    if (threadsStatus == "idle") {
+    if (threadsStatus === "idle") {
       dispatch(getThreadList());
     }
   }, [threadsStatus, threadsError]);
 
   return (
-    <Stack spacing={2}>
-      <h2>Threads</h2>
-      {threadList.map((thread: Thread) => (
-        <ThreadExcerpt
-          key={thread.ID?.toString()}
-          thread={{ ...thread, content: thread.content.substring(0, 100) }}
+    <Box sx={{ margin: "20px", padding: "50px" }}>
+      <Stack spacing={2}>
+        <h2>Threads</h2>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-start",
+          }}
+        >
+          <Tooltip title="Create New Thread">
+            <Fab
+              color="primary"
+              onClick={() => setThreadAddDialogOpen(true)}
+              variant="extended"
+            >
+              <AddIcon />
+              New Thread
+            </Fab>
+          </Tooltip>
+        </Box>
+        {threadList.map((thread: Thread) => (
+          <ThreadExcerpt
+            key={thread.ID?.toString()}
+            thread={{ ...thread, content: thread.content.substring(0, 100) }}
+          />
+        ))}
+        <ThreadAdd
+          dialogOpen={threadAddDialogOpen}
+          setDialogOpen={setThreadAddDialogOpen}
+          thread={{ title: "", tag: "", content: "", author: "", image: null }}
+          create={true}
         />
-      ))}
-      <Box
-        sx={{ display: "flex", justifyContent: "flex-end", padding: "20px" }}
-      >
-        <Tooltip title="Create New Thread">
-          <Fab color="primary" onClick={() => setThreadAddOpen(true)}>
-            <AddIcon />
-          </Fab>
-        </Tooltip>
-      </Box>
-      <ThreadAdd
-        threadAddOpen={threadAddOpen}
-        setThreadAddOpen={setThreadAddOpen}
-      />
-    </Stack>
+      </Stack>
+    </Box>
   );
 }

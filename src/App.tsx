@@ -1,7 +1,6 @@
-import React from "react";
 import "./App.css";
 import ThreadsList from "./features/threads/ThreadsList";
-import { Link, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { ThreadPage } from "./features/threads/ThreadPage";
 import Home from "./features/user/Home";
 

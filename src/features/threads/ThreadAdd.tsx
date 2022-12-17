@@ -4,30 +4,32 @@ import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { DialogActions } from "@mui/material";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { createThread } from "./threadSlice";
+import { createThread, editThread, Thread } from "./threadSlice";
 import { selectUsername } from "../user/userSlice";
 import Delete from "@mui/icons-material/Delete";
 
 export function ThreadAdd({
-  threadAddOpen,
-  setThreadAddOpen,
+  dialogOpen,
+  setDialogOpen,
+  thread,
+  create,
 }: {
-  threadAddOpen: boolean;
-  setThreadAddOpen: Function;
+  dialogOpen: boolean;
+  setDialogOpen: Function;
+  thread: Thread;
+  create: boolean;
 }) {
   const dispatch = useAppDispatch();
-  const author = useAppSelector(selectUsername);
-  const [title, setTitle] = useState("");
-  const [tag, setTag] = useState("");
-  const [content, setContent] = useState("");
-  const [image, setImage] = useState<null | File>(null);
+  const [title, setTitle] = useState(thread.title);
+  const [tag, setTag] = useState(thread.tag);
+  const [content, setContent] = useState(thread.content);
+  const [image, setImage] = useState<string | null>(thread.image);
   return (
-    <Dialog open={threadAddOpen}>
+    <Dialog open={dialogOpen}>
       <DialogTitle
         sx={{
           display: "flex",
@@ -36,7 +38,7 @@ export function ThreadAdd({
         }}
       >
         Create a New Thread
-        <IconButton onClick={() => setThreadAddOpen(false)}>
+        <IconButton onClick={() => setDialogOpen(false)}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -91,37 +93,46 @@ export function ThreadAdd({
             accept="image/*"
             hidden
             type="file"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              e.target.files ? setImage(e.target.files[0]) : null
-            }
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              if (e.target.files) {
+                const reader = new FileReader();
+                reader.addEventListener("load", () =>
+                  setImage(
+                    typeof reader.result === "string" ? reader.result : null
+                  )
+                );
+                reader.readAsDataURL(e.target.files[0]);
+              }
+            }}
           />
           Upload Image
         </Button>
-        <IconButton sx={{color:"#ED4337"}} onClick={() => setImage(null)}>
-            <Delete />
+        <IconButton sx={{ color: "#ED4337" }} onClick={() => setImage(null)}>
+          <Delete />
         </IconButton>
         <br />
-        {image && (
-          <img
-            src={image ? URL.createObjectURL(image) : undefined}
-            width={400}
-            height={"auto"}
-          />
-        )}
+        {image && <img src={image} width={400} height={"auto"} />}
       </DialogContent>
       <DialogActions>
         <Button
           variant="contained"
           onClick={() => {
-            dispatch(
-              createThread({
-                title: title,
-                tag: tag,
-                content: content,
-                author: author,
-              })
-            );
-            setThreadAddOpen(false);
+            const threadNew: Thread = {
+              ID: thread.ID,
+              CreatedAt: thread.CreatedAt,
+              title: title,
+              tag: tag,
+              content: content,
+              author: thread.author,
+              image: image,
+            };
+
+            dispatch(create ? createThread(threadNew) : editThread(threadNew));
+            setTitle("");
+            setContent("");
+            setTag("");
+            setImage(null);
+            setDialogOpen(false);
           }}
           disabled={
             title.length === 0 || content.length === 0 || tag.length === 0

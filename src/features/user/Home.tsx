@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { userErrorNoted, getUser, login, register, userStatusCreateNoted } from "./userSlice";
+import {
+  userErrorNoted,
+  getUser,
+  login,
+  register,
+  userStatusCreateNoted,
+} from "./userSlice";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { Paper } from "@mui/material";
 import TextField from "@mui/material/TextField";
@@ -10,18 +16,19 @@ import Stack from "@mui/material/Stack";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import MuiAlert from "@mui/material/Alert";
-import Snackbar from "@mui/material/Snackbar"
-
+import Snackbar from "@mui/material/Snackbar";
 
 export default function Home() {
   const dispatch = useAppDispatch();
   const navigate: NavigateFunction = useNavigate();
 
   const [currentTab, setCurrentTab] = useState(0);
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const statusLog: string = useAppSelector((state) => state.user.statusLog);
-  const statusCreate: string = useAppSelector((state) => state.user.statusCreate);
+  const statusCreate: string = useAppSelector(
+    (state) => state.user.statusCreate
+  );
 
   useEffect(() => {
     dispatch(getUser());
@@ -33,11 +40,11 @@ export default function Home() {
   }, [statusLog]);
   useEffect(() => {
     if (statusCreate === "success") {
-      setSnackbarOpen(true)
-      setCurrentTab(0)
-      dispatch(userStatusCreateNoted())
+      setSnackbarOpen(true);
+      setCurrentTab(0);
+      dispatch(userStatusCreateNoted());
     }
-  })
+  }, [statusCreate]);
 
   return (
     <Grid>
@@ -55,7 +62,11 @@ export default function Home() {
         {currentTab === 0 && <Login />}
         {currentTab === 1 && <Register />}
       </Paper>
-      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)}>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
         <MuiAlert onClose={() => setSnackbarOpen(false)} severity="success">
           Account Registered!
         </MuiAlert>
@@ -137,7 +148,9 @@ function Register() {
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
-  const statusCreate: string = useAppSelector((state) => state.user.statusCreate);
+  const statusCreate: string = useAppSelector(
+    (state) => state.user.statusCreate
+  );
   return (
     <Stack spacing={4}>
       Register
@@ -214,9 +227,9 @@ function Register() {
             setConfirmPasswordError(true);
           }
           if (
-            !usernameError &&
-            !passwordError &&
-            !confirmPasswordError
+            username.length >= 5 &&
+            password.length >= 8 &&
+            confirmPassword === password
           ) {
             dispatch(register({ username: username, password: password }));
           }
@@ -224,7 +237,8 @@ function Register() {
         disabled={
           statusCreate === "pending" ||
           username.length === 0 ||
-          password.length === 0 || confirmPassword.length === 0
+          password.length === 0 ||
+          confirmPassword.length === 0
         }
         fullWidth
       >
