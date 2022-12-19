@@ -16,6 +16,7 @@ import Divider from "@mui/material/Divider";
 import { useEffect } from "react";
 import { getUser } from "../user/userSlice";
 import { RootState } from "../../app/store";
+import { timeToTimeAgo } from "../../app/time";
 
 export function ThreadPage() {
   const { id } = useParams();
@@ -70,7 +71,7 @@ function ThreadView({ thread }: { thread: Thread }) {
         </Grid>
         <Grid item>
           <h2>{thread.title}</h2>
-          <p>{thread.CreatedAt}</p>
+          <p>{thread.CreatedAt ? timeToTimeAgo(thread.CreatedAt): null}</p>
         </Grid>
         <Grid item sx={{ marginTop: "24px" }}>
           <Chip label={thread.tag} variant="outlined" color="primary" />

@@ -18,6 +18,7 @@ import { useState } from "react";
 import { CommentAdd } from "./CommentAdd";
 import { selectUsername } from "../user/userSlice";
 import { Box } from "@mui/system";
+import { timeToTimeAgo } from "../../app/time";
 
 export function CommentC({ comment }: { comment: Comment }) {
   const currentUser: string = useAppSelector(selectUsername);
@@ -36,7 +37,7 @@ export function CommentC({ comment }: { comment: Comment }) {
         <Grid item xs={10}>
           <h4>{comment.author}</h4>
           <p>{comment.content}</p>
-          <p>{comment.CreatedAt}</p>
+          <p>{comment.CreatedAt ? timeToTimeAgo(comment.CreatedAt): null}</p>
         </Grid>
         {comment.author === currentUser && (
           <Box display="flex" flexDirection="column" justifyContent="flex-end">

@@ -26,6 +26,7 @@ import { useState } from "react";
 import { ThreadAdd } from "./ThreadAdd";
 import { useNavigate } from "react-router-dom";
 import { commentsStatusNoted } from "../comments/commentSlice";
+import { timeToTimeAgo } from "../../app/time";
 
 export function ThreadExcerpt({
   thread,
@@ -36,8 +37,8 @@ export function ThreadExcerpt({
 }) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen]: [boolean, Function] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen]: [boolean, Function] = useState(false);
 
   const currentUser: string = useAppSelector(selectUsername);
   return (
@@ -56,7 +57,7 @@ export function ThreadExcerpt({
               </Avatar> //randomise color or base on username characters
             }
             title={thread.title}
-            subheader={thread.CreatedAt}
+            subheader={thread.CreatedAt? timeToTimeAgo(thread.CreatedAt) : null}
           />
           <Chip
             label={thread.tag}
