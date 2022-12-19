@@ -22,8 +22,8 @@ import { Box } from "@mui/system";
 export function CommentC({ comment }: { comment: Comment }) {
   const currentUser: string = useAppSelector(selectUsername);
   const dispatch = useAppDispatch();
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen]: [boolean, Function] = useState(false);
+  const [editDialogOpen, setEditDialogOpen]: [boolean, Function] = useState(false);
 
   return (
     <>

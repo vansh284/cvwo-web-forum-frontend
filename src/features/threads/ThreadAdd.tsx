@@ -5,11 +5,10 @@ import TextField from "@mui/material/TextField";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
-import { DialogActions } from "@mui/material";
+import { Autocomplete, DialogActions } from "@mui/material";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { createThread, editThread, Thread } from "./threadSlice";
-import { selectUsername } from "../user/userSlice";
 import Delete from "@mui/icons-material/Delete";
 
 export function ThreadAdd({
@@ -24,10 +23,12 @@ export function ThreadAdd({
   create: boolean;
 }) {
   const dispatch = useAppDispatch();
-  const [title, setTitle] = useState(thread.title);
-  const [tag, setTag] = useState(thread.tag);
-  const [content, setContent] = useState(thread.content);
-  const [image, setImage] = useState<string | null>(thread.image);
+  const [title, setTitle]: [string, Function] = useState(thread.title);
+  const [tag, setTag]: [string, Function] = useState(thread.tag);
+  const [content, setContent]: [string, Function] = useState(thread.content);
+  const [image, setImage]: [string | null, Function] = useState<string | null>(
+    thread.image
+  );
   return (
     <Dialog open={dialogOpen}>
       <DialogTitle
@@ -56,18 +57,22 @@ export function ThreadAdd({
           ) => setTitle(e.target.value)}
           required
         />
-        <TextField
-          autoFocus
-          margin="dense"
-          label="Tag"
-          type="text"
-          fullWidth
-          variant="outlined"
+
+        <Autocomplete
+          options={[
+            "Education",
+            "Work",
+            "Social Life",
+            "Philosophy",
+            "Culture",
+            "Politics",
+            "Miscellaneous",
+          ]}
           value={tag}
-          onChange={(
-            e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-          ) => setTag(e.target.value)}
-          required
+          onChange={(_, newTag: string | null) => setTag(newTag)}
+          disablePortal
+          renderInput={(params) => <TextField {...params} label="Tag" />}
+          fullWidth
         />
         <TextField
           autoFocus

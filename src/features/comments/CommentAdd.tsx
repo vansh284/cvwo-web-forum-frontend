@@ -26,7 +26,7 @@ export function CommentAdd({
   create: boolean;
 }) {
   const dispatch = useAppDispatch();
-  const [content, setContent] = useState(comment.content);
+  const [content, setContent]: [string, Function] = useState(comment.content);
   return (
     <Dialog open={dialogOpen}>
       <DialogTitle

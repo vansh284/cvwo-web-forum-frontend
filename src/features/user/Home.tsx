@@ -51,7 +51,7 @@ export default function Home() {
       <Paper elevation={10} className="paperClass">
         <Tabs
           value={currentTab}
-          onChange={(e: React.SyntheticEvent, newTab: number) =>
+          onChange={(_: React.SyntheticEvent, newTab: number) =>
             setCurrentTab(newTab)
           }
           centered
