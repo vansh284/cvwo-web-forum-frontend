@@ -1,4 +1,5 @@
-const URL = "http://localhost:3001";
+const URL: string = "https://cvwo-web-forum-api.onrender.com"
+
 export function get(route: string, body?: object) {
   return fetch(URL + route, {
     method: "GET",
