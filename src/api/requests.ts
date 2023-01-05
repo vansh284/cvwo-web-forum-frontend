@@ -1,4 +1,4 @@
-const URL: string = "https://cvwo-web-forum-api.onrender.com"
+const URL: string = "api"
 
 export function get(route: string, body?: object) {
   return fetch(URL + route, {
