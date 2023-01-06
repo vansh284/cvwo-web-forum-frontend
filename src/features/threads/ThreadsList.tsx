@@ -52,6 +52,7 @@ export default function ThreadsList() {
   const threadsError: string | null = useAppSelector(
     (state: RootState) => state.thread.error
   );
+  const currentUser: string = useAppSelector(selectUsername);
   const statusLog: string = useAppSelector((state) => state.user.statusLog);
 
   //Log user in
