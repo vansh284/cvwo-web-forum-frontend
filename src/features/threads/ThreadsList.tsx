@@ -57,7 +57,9 @@ export default function ThreadsList() {
 
   //Log user in
   useEffect(() => {
-    dispatch(getUser());
+    if (statusLog === "logged out") {
+      dispatch(getUser());
+    }
   });
 
   //Autodirect users not logged in to the home page
