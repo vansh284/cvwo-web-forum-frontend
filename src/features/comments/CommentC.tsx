@@ -21,6 +21,7 @@ import { CommentAdd } from "./CommentAdd";
 import { selectUsername } from "../user/userSlice";
 import { Box } from "@mui/system";
 import { timeToTimeAgo } from "../../app/time";
+import stc from "string-to-color";
 
 export function CommentC({ comment }: { comment: Comment }) {
   const currentUser: string = useAppSelector(selectUsername);
@@ -34,7 +35,7 @@ export function CommentC({ comment }: { comment: Comment }) {
     <>
       <Grid container spacing={2} wrap="nowrap" key={comment.ID?.toString()}>
         <Grid item sx={{ marginTop: "10px" }}>
-          <Avatar sx={{ bgcolor: "blueviolet" }}>
+          <Avatar sx={{ bgcolor: stc(comment.author) }}>
             {comment.author.substring(0, 1).toUpperCase()}
           </Avatar>
         </Grid>

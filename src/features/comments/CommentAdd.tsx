@@ -13,6 +13,7 @@ import { useState } from "react";
 import { useAppDispatch } from "../../app/hooks";
 import { Comment, createComment, editComment } from "./commentSlice";
 import CloseIcon from "@mui/icons-material/Close";
+import stc from "string-to-color";
 
 export function CommentAdd({
   dialogOpen,
@@ -44,7 +45,7 @@ export function CommentAdd({
       <DialogContent>
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
-            <Avatar sx={{ bgcolor: "blueviolet", margin: "10px" }}>
+            <Avatar sx={{ bgcolor: stc(comment.author), margin: "10px" }}>
               {comment.author.substring(0, 1).toUpperCase()}
             </Avatar>
           </Grid>

@@ -27,6 +27,7 @@ import { ThreadAdd } from "./ThreadAdd";
 import { useNavigate } from "react-router-dom";
 import { commentsStatusNoted } from "../comments/commentSlice";
 import { timeToTimeAgo } from "../../app/time";
+import stc from "string-to-color";
 
 export function ThreadExcerpt({
   thread,
@@ -44,7 +45,7 @@ export function ThreadExcerpt({
 
   const currentUser: string = useAppSelector(selectUsername);
   return (
-    <Card key={thread.ID?.toString()} variant="outlined" >
+    <Card key={thread.ID?.toString()} variant="outlined">
       <CardActionArea
         onClick={() => {
           dispatch(commentsStatusNoted());
@@ -54,7 +55,7 @@ export function ThreadExcerpt({
         <Stack direction="row">
           <CardHeader
             avatar={
-              <Avatar sx={{ bgcolor: "blueviolet" }}>
+              <Avatar sx={{ bgcolor: stc(thread.author) }}>
                 {thread.author.substring(0, 1).toUpperCase()}
               </Avatar> //randomise color or base on username characters
             }
@@ -66,8 +67,7 @@ export function ThreadExcerpt({
           <Chip
             label={thread.tag}
             variant="outlined"
-            color="primary"
-            sx={{ margin: "20px" }}
+            sx={{ margin: "20px", backgroundColor:stc(thread.tag)}}
           />
         </Stack>
         {thread.image && (

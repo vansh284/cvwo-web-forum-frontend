@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import { getUser } from "../user/userSlice";
 import { RootState } from "../../app/store";
 import { timeToTimeAgo } from "../../app/time";
+import stc from "string-to-color";
 
 export function ThreadPage() {
   const { id } = useParams();
@@ -29,6 +30,7 @@ export function ThreadPage() {
   const threadsError: string | null = useAppSelector(
     (state: RootState) => state.thread.error
   );
+
   //Log user in
   useEffect(() => {
     dispatch(getUser());
@@ -56,7 +58,7 @@ export function ThreadPage() {
       className="Paper"
     >
       <ThreadView thread={thread} />
-      <Divider sx={{borderBottomWidth:1.5, borderColor:"black"}}/>
+      <Divider sx={{ borderBottomWidth: 1.5, borderColor: "black" }} />
       <CommentList key={ID.toString()} ID={ID} />
     </Paper>
   );
@@ -68,9 +70,9 @@ function ThreadView({ thread }: { thread: Thread }) {
       <Stack direction="row">
         <CardHeader
           avatar={
-            <Avatar sx={{ bgcolor: "blueviolet" }}>
+            <Avatar sx={{ bgcolor: stc(thread.author) }}>
               {thread.author.substring(0, 1).toUpperCase()}
-            </Avatar> //randomise color or base on username characters
+            </Avatar>
           }
           titleTypographyProps={{
             fontSize: "24px",
@@ -84,8 +86,11 @@ function ThreadView({ thread }: { thread: Thread }) {
         <Chip
           label={thread.tag}
           variant="outlined"
-          color="primary"
-          sx={{ marginLeft: "20px", marginTop: "30px" }}
+          sx={{
+            marginLeft: "20px",
+            marginTop: "30px",
+            backgroundColor: stc(thread.tag),
+          }}
         />
       </Stack>
       <Divider />
@@ -99,7 +104,14 @@ function ThreadView({ thread }: { thread: Thread }) {
       />
       <CardContent className="CardContent">{thread.content}</CardContent>
       {thread.image ? (
-        <Box sx={{ height: "300px", width: "500px", marginBottom:"30px", marginLeft:"17px" }}>
+        <Box
+          sx={{
+            height: "300px",
+            width: "500px",
+            marginBottom: "30px",
+            marginLeft: "17px",
+          }}
+        >
           <CardMedia
             component="img"
             height="100%"

@@ -14,6 +14,7 @@ import {
 import {
   Autocomplete,
   Button,
+  Chip,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -26,11 +27,13 @@ import {
   Tooltip,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
 import Stack from "@mui/system/Stack/Stack";
 import { Box } from "@mui/system";
 import { ThreadExcerpt } from "./ThreadExcerpt";
 import { ThreadAdd } from "./ThreadAdd";
 import { getUser, logout, selectUsername } from "../user/userSlice";
+import stc from "string-to-color";
 
 export default function ThreadsList() {
   const dispatch = useAppDispatch();
@@ -149,13 +152,25 @@ export default function ThreadsList() {
             "Politics",
             "Miscellaneous",
           ]}
+          value={tags}
           onChange={(_, tags: string[]) => setTags(tags)}
           disablePortal
+          renderTags={(value: string[]) =>
+            value.map((option: string) => (
+              <Chip
+                key={option}
+                label={option}
+                sx={{ backgroundColor: stc(option) }}
+                deleteIcon={<CloseIcon />}
+                onDelete={() => setTags(tags.filter((tag) => tag !== option))}
+              />
+            ))
+          }
           renderInput={(params) => (
             <TextField
               {...params}
-              label="Tag"
-              placeholder="Search for Thread by Tag"
+              label="Search for Thread by Tag"
+              placeholder="Tag"
             />
           )}
           fullWidth
@@ -164,7 +179,9 @@ export default function ThreadsList() {
           value={recent}
           color="primary"
           exclusive
-          onChange={(_, recent: string) => setRecent(recent)}
+          onChange={(_, recent: string) =>
+            recent !== null ? setRecent(recent) : null
+          }
         >
           <ToggleButton
             value={"most recent"}
