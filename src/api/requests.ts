@@ -1,4 +1,4 @@
-const URL: string = "http://localhost:8000";
+const URL: string = "https://cvwo-web-forum.onrender.com/api";
 
 export async function get(route: string, body?: object) {
   const response = await fetch(URL + route, {
