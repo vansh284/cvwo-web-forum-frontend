@@ -52,7 +52,7 @@ export default function ThreadsList() {
   const threadsError: string | null = useAppSelector(
     (state: RootState) => state.thread.error
   );
-  const currentUser = useAppSelector(selectUsername);
+  const statusLog: string = useAppSelector((state) => state.user.statusLog);
 
   //Log user in
   useEffect(() => {
@@ -61,7 +61,7 @@ export default function ThreadsList() {
 
   //Autodirect users not logged in to the home page
   useEffect(() => {
-    if (currentUser === "") {
+    if (statusLog === "logged out") {
       navigate("/", { replace: true });
       dispatch(threadsErrorNoted());
     }
