@@ -119,7 +119,10 @@ export function ThreadExcerpt({
           <Button
             variant="contained"
             sx={{ bgcolor: "#ED4337" }}
-            onClick={() => dispatch(deleteThread(thread))}
+            onClick={() => {
+              dispatch(deleteThread(thread));
+              setDeleteDialogOpen(false);
+            }}
           >
             Yes
           </Button>

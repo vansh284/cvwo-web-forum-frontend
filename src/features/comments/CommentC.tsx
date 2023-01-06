@@ -42,14 +42,14 @@ export function CommentC({ comment }: { comment: Comment }) {
         <Grid item xs={10}>
           <Grid container spacing={2} wrap="nowrap">
             <Grid item>
-        <CardHeader
-          titleTypographyProps={{
-            fontSize: "24px",
-            fontWeight: "bold",
-            fontFamily: "Georgia, 'Times New Roman', Times, serif",
-          }}
-          title={comment.author}
-        />
+              <CardHeader
+                titleTypographyProps={{
+                  fontSize: "24px",
+                  fontWeight: "bold",
+                  fontFamily: "Georgia, 'Times New Roman', Times, serif",
+                }}
+                title={comment.author}
+              />
             </Grid>
             <Grid item>
               <CardHeader
@@ -97,7 +97,10 @@ export function CommentC({ comment }: { comment: Comment }) {
           <Button
             variant="contained"
             sx={{ bgcolor: "#ED4337" }}
-            onClick={() => dispatch(deleteComment(comment))}
+            onClick={() => {
+              dispatch(deleteComment(comment));
+              setDeleteDialogOpen(false);
+            }}
           >
             Yes
           </Button>
