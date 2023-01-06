@@ -1,6 +1,8 @@
 import {
   Avatar,
   Button,
+  CardContent,
+  CardHeader,
   Dialog,
   DialogActions,
   DialogContent,
@@ -23,8 +25,10 @@ import { timeToTimeAgo } from "../../app/time";
 export function CommentC({ comment }: { comment: Comment }) {
   const currentUser: string = useAppSelector(selectUsername);
   const dispatch = useAppDispatch();
-  const [deleteDialogOpen, setDeleteDialogOpen]: [boolean, Function] = useState(false);
-  const [editDialogOpen, setEditDialogOpen]: [boolean, Function] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen]: [boolean, Function] =
+    useState(false);
+  const [editDialogOpen, setEditDialogOpen]: [boolean, Function] =
+    useState(false);
 
   return (
     <>
@@ -35,9 +39,26 @@ export function CommentC({ comment }: { comment: Comment }) {
           </Avatar>
         </Grid>
         <Grid item xs={10}>
-          <h4>{comment.author}</h4>
-          <p>{comment.content}</p>
-          <p>{comment.CreatedAt ? timeToTimeAgo(comment.CreatedAt): null}</p>
+          <Grid container spacing={2} wrap="nowrap">
+            <Grid item>
+        <CardHeader
+          titleTypographyProps={{
+            fontSize: "24px",
+            fontWeight: "bold",
+            fontFamily: "Georgia, 'Times New Roman', Times, serif",
+          }}
+          title={comment.author}
+        />
+            </Grid>
+            <Grid item>
+              <CardHeader
+                subheader={
+                  comment.CreatedAt ? timeToTimeAgo(comment.CreatedAt) : null
+                }
+              />
+            </Grid>
+          </Grid>
+          <CardContent className="CardContent">{comment.content}</CardContent>
         </Grid>
         {comment.author === currentUser && (
           <Box display="flex" flexDirection="column" justifyContent="flex-end">
@@ -72,8 +93,16 @@ export function CommentC({ comment }: { comment: Comment }) {
         <DialogTitle>Delete this Comment?</DialogTitle>
         <DialogContent>This cannot be undone.</DialogContent>
         <DialogActions>
-          <Button variant="contained" sx={{ bgcolor: "#ED4337" }} onClick={() => dispatch(deleteComment(comment))}>Yes</Button>
-          <Button variant="outlined" onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+          <Button
+            variant="contained"
+            sx={{ bgcolor: "#ED4337" }}
+            onClick={() => dispatch(deleteComment(comment))}
+          >
+            Yes
+          </Button>
+          <Button variant="outlined" onClick={() => setDeleteDialogOpen(false)}>
+            Cancel
+          </Button>
         </DialogActions>
       </Dialog>
     </>

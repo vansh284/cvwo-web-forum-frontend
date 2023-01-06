@@ -5,6 +5,8 @@ import { RootState } from "../../app/store";
 import {
   getThreadList,
   selectThreadList,
+  sortThreadsByLeastRecent,
+  sortThreadsByMostRecent,
   Thread,
   threadsErrorNoted,
 } from "./threadSlice";
@@ -12,9 +14,15 @@ import {
 import {
   Autocomplete,
   Button,
-  Chip,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
   Fab,
+  Paper,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
   Tooltip,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -22,14 +30,18 @@ import Stack from "@mui/system/Stack/Stack";
 import { Box } from "@mui/system";
 import { ThreadExcerpt } from "./ThreadExcerpt";
 import { ThreadAdd } from "./ThreadAdd";
-import { getUser, selectUsername } from "../user/userSlice";
+import { getUser, logout, selectUsername } from "../user/userSlice";
 
 export default function ThreadsList() {
   const dispatch = useAppDispatch();
   const navigate: NavigateFunction = useNavigate();
   const [threadAddDialogOpen, setThreadAddDialogOpen]: [boolean, Function] =
     useState(false);
+  const [logoutDialogOpen, setLogoutDialogOpen]: [boolean, Function] =
+    useState(false);
   const [threadList, setThreadList]: [Thread[], Function] = useState([]);
+  const [tags, setTags]: [string[], Function] = useState([]);
+  const [recent, setRecent]: [string, Function] = useState("most recent");
   const fullThreadList = useAppSelector(selectThreadList);
   const threadsStatus: string = useAppSelector(
     (state: RootState) => state.thread.statusGet
@@ -38,41 +50,94 @@ export default function ThreadsList() {
     (state: RootState) => state.thread.error
   );
   const currentUser = useAppSelector(selectUsername);
-  const tags: string[] = [
-    "All",
-    "Education",
-    "Work",
-    "Social Life",
-    "Philosophy",
-    "Culture",
-    "Politics",
-    "Miscellaneous",
-  ];
+
   //Log user in
   useEffect(() => {
     dispatch(getUser());
   });
 
-  // Autodirect users not logged in to the home page
+  //Autodirect users not logged in to the home page
   useEffect(() => {
-    if (threadsError !== null) {
+    if (currentUser === "") {
       navigate("/", { replace: true });
       dispatch(threadsErrorNoted());
     }
   });
 
-  //Get the threads
+  //Gets the full thread list
   useEffect(() => {
     if (threadsStatus === "idle") {
       dispatch(getThreadList());
     }
     setThreadList(fullThreadList);
-  }, [threadsStatus, threadsError]);
+  }, [threadsStatus, threadsError, fullThreadList]);
+
+  //Modifies threadlist everytime tags is updated
+  useEffect(() => {
+    tags.length > 0
+      ? setThreadList(
+          fullThreadList.filter((thread) =>
+            tags.reduce((curr, tag) => curr || tag === thread.tag, false)
+          )
+        )
+      : setThreadList(fullThreadList);
+  }, [tags, fullThreadList]);
 
   return (
-    <Box sx={{ margin: "20px", padding: "50px" }}>
+    <Paper
+      sx={{
+        margin: "100px 300px",
+        padding: "50px",
+      }}
+      variant="elevation"
+      elevation={10}
+      className="Paper"
+    >
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <Tooltip title="Create New Thread">
+          <Fab
+            color="primary"
+            onClick={() => setThreadAddDialogOpen(true)}
+            variant="extended"
+          >
+            <AddIcon />
+            New Thread
+          </Fab>
+        </Tooltip>
+        <Button variant="outlined" onClick={() => setLogoutDialogOpen(true)}>
+          Logout
+        </Button>
+        <Dialog open={logoutDialogOpen}>
+          <DialogContent className="DialogContent">
+            Are you sure you want to Logout?
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="contained"
+              sx={{ bgcolor: "#ED4337" }}
+              onClick={() => {
+                dispatch(logout());
+                setLogoutDialogOpen(false);
+              }}
+            >
+              Yes
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => setLogoutDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
       <Stack spacing={2}>
-        <h2>Threads</h2>
+        <h1>Threads</h1>
         <Autocomplete
           multiple
           options={[
@@ -84,69 +149,58 @@ export default function ThreadsList() {
             "Politics",
             "Miscellaneous",
           ]}
-          onChange={(_, tags) =>
-            tags.length > 0
-              ? setThreadList(
-                  fullThreadList.filter((thread) =>
-                    tags.reduce(
-                      (curr, tag) => curr || tag === thread.tag,
-                      false
-                    )
-                  )
-                )
-              : setThreadList(fullThreadList)
-          }
+          onChange={(_, tags: string[]) => setTags(tags)}
           disablePortal
           renderInput={(params) => (
             <TextField
               {...params}
               label="Tag"
-              placeholder="Select the tags you wish to see"
+              placeholder="Search for Thread by Tag"
             />
           )}
           fullWidth
         />
-        {/* <Stack direction="row" spacing={2}>
-          {tags.map((tag: string) => (
-            <Button
-              onClick={() =>
-                tag === "All"
-                  ? setThreadList(fullThreadList)
-                  : setThreadList(fullThreadList.filter((x) => x.tag === tag))
-              }
-            >
-              <Chip
-                label={tag}
-                color={tag.length % 2 === 0 ? "primary" : "secondary"} //temp color hash
-                clickable
-                variant="filled"
-              />
-            </Button>
-          ))}
-        </Stack> */}
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "flex-start",
-          }}
+        <ToggleButtonGroup
+          value={recent}
+          color="primary"
+          exclusive
+          onChange={(_, recent: string) => setRecent(recent)}
         >
-          <Tooltip title="Create New Thread">
-            <Fab
-              color="primary"
-              onClick={() => setThreadAddDialogOpen(true)}
-              variant="extended"
-            >
-              <AddIcon />
-              New Thread
-            </Fab>
-          </Tooltip>
-        </Box>
-        {threadList.map((thread: Thread) => (
-          <ThreadExcerpt
-            key={thread.ID?.toString()}
-            thread={{ ...thread, content: thread.content.substring(0, 100) }}
-          />
-        ))}
+          <ToggleButton
+            value={"most recent"}
+            onClick={() => {
+              dispatch(sortThreadsByMostRecent());
+            }}
+          >
+            Sort by Most Recent
+          </ToggleButton>
+          <ToggleButton
+            value={"least recent"}
+            onClick={() => {
+              dispatch(sortThreadsByLeastRecent());
+            }}
+          >
+            Sort by Least Recent
+          </ToggleButton>
+        </ToggleButtonGroup>
+        {threadsStatus === "pending" ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              padding: "150px 0",
+            }}
+          >
+            <CircularProgress size={150} />
+          </Box>
+        ) : (
+          threadList.map((thread: Thread) => (
+            <ThreadExcerpt
+              key={thread.ID?.toString()}
+              thread={{ ...thread, content: thread.content.substring(0, 100) }}
+            />
+          ))
+        )}
         <ThreadAdd
           dialogOpen={threadAddDialogOpen}
           setDialogOpen={setThreadAddDialogOpen}
@@ -160,6 +214,6 @@ export default function ThreadsList() {
           create={true}
         />
       </Stack>
-    </Box>
+    </Paper>
   );
 }

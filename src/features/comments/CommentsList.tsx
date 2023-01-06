@@ -1,4 +1,4 @@
-import { Button, Divider, Paper } from "@mui/material";
+import { Box, Button, CircularProgress, Divider, Paper } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { RootState } from "../../app/store";
@@ -27,30 +27,41 @@ export function CommentList({ ID }: { ID: Number }) {
   }, [commentsStatus, commentsError]);
 
   return (
-    <Paper
-      variant="outlined"
-      sx={{ margin: "0px 100px 100px 100px", padding: "50px" }}
-    >
-      <h2>Comments Section</h2>
-      <Button
-        variant="outlined"
-        onClick={() => setCommentOpen(true)}
-        sx={{ marginBottom: "20px" }}
-      >
-        Comment
-      </Button>
-      <Divider />
-      {commentList.map((comment: Comment) => (
-        <CommentC key={comment.ID?.toString()} comment={comment} />
-      ))}
-      {commentOpen && (
-        <CommentAdd
-          dialogOpen={commentOpen}
-          setDialogOpen={setCommentOpen}
-          comment={{ thread_id: ID, content: "", author: currentUser }}
-          create={true}
-        />
+    <>
+      {commentsStatus === "pending" ? (
+        <Box
+          sx={{ display: "flex", justifyContent: "center", padding: "150px 0" }}
+        >
+          <CircularProgress size={60} />
+        </Box>
+      ) : (
+        <>
+          <h2 style={{fontWeight:"bold"}}>Comments Section</h2>
+          <Button
+            variant="outlined"
+            onClick={() => setCommentOpen(true)}
+            sx={{ marginBottom: "20px" }}
+          >
+            Comment
+          </Button>
+          <Divider />
+          {commentList.length > 0 ? (
+            commentList.map((comment: Comment) => (
+              <CommentC key={comment.ID?.toString()} comment={comment} />
+            ))
+          ) : (
+            <p>No comments yet. Be the first to comment !</p>
+          )}
+          {commentOpen && (
+            <CommentAdd
+              dialogOpen={commentOpen}
+              setDialogOpen={setCommentOpen}
+              comment={{ thread_id: ID, content: "", author: currentUser }}
+              create={true}
+            />
+          )}
+        </>
       )}
-    </Paper>
+    </>
   );
 }

@@ -17,6 +17,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
+import logo from "../../assets/logo.svg";
 
 export default function Home() {
   const dispatch = useAppDispatch();
@@ -48,7 +49,18 @@ export default function Home() {
 
   return (
     <Grid>
-      <Paper elevation={10} className="paperClass">
+      <Paper
+        elevation={10}
+        className="Paper"
+        sx={{
+          padding: "40px",
+          width: "520px",
+          height: "700px",
+          margin: "100px auto",
+          textAlign: "center",
+        }}
+      >
+        <h2 style={{fontWeight:"700"}}>Welcome to the Web Forum!</h2>
         <Tabs
           value={currentTab}
           onChange={(_: React.SyntheticEvent, newTab: number) =>
@@ -82,8 +94,15 @@ function Login() {
   const statusLog: string = useAppSelector((state) => state.user.statusLog);
   const errorLog: string | null = useAppSelector((state) => state.user.error);
   return (
-    <Stack spacing={4}>
-      Login
+    <Stack spacing={2}>
+      <img
+        style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginTop:"20px" }}
+        height="130px"
+        width="150px"
+        src={logo}
+        alt="logo"
+      />
+      <h2 style={{ fontWeight: "bold" }}>Login</h2>
       <TextField
         label="Username"
         onChange={(
@@ -151,9 +170,19 @@ function Register() {
   const statusCreate: string = useAppSelector(
     (state) => state.user.statusCreate
   );
+  const errorCreate: string | null = useAppSelector(
+    (state) => state.user.error
+  );
   return (
-    <Stack spacing={4}>
-      Register
+    <Stack spacing={2}>
+      <img
+        style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginTop:"20px" }}
+        height="130px"
+        width="150px"
+        src={logo}
+        alt="logo"
+      />
+      <h2 style={{ fontWeight: "bold" }}>Register</h2>
       <TextField
         label="Username"
         onChange={(
@@ -163,13 +192,20 @@ function Register() {
           if (usernameError) {
             setUsernameError(false);
           }
+          if (errorCreate) {
+            dispatch(userErrorNoted());
+          }
         }}
         value={username}
         required
         fullWidth
-        error={usernameError}
+        error={usernameError || errorCreate !== null}
         helperText={
-          usernameError ? "Username must be at least 5 characters" : null
+          usernameError
+            ? "Username must be at least 5 characters"
+            : errorCreate !== null
+            ? "Username is already in use"
+            : null
         }
         disabled={statusCreate === "pending"}
       />

@@ -62,6 +62,28 @@ const threadSlice = createSlice({
     threadsErrorNoted(state) {
       state.error = null;
     },
+    sortThreadsByMostRecent(state) {
+      state.threadList.sort((a: Thread, b: Thread) => {
+        if (a.CreatedAt && b.CreatedAt) {
+          const d1: Date = new Date(a.CreatedAt);
+          const d2: Date = new Date(b.CreatedAt);
+          return d1 > d2 ? -1 : 1;
+        } else {
+          return 0;
+        }
+      });
+    },
+    sortThreadsByLeastRecent(state) {
+      state.threadList.sort((a: Thread, b: Thread) => {
+        if (a.CreatedAt && b.CreatedAt) {
+          const d1: Date = new Date(a.CreatedAt);
+          const d2: Date = new Date(b.CreatedAt);
+          return d1 < d2 ? -1 : 1;
+        } else {
+          return 0;
+        }
+      });
+    },
   },
   extraReducers(builder) {
     builder
@@ -133,7 +155,7 @@ const threadSlice = createSlice({
 
 export default threadSlice.reducer;
 
-export const { threadsErrorNoted } = threadSlice.actions;
+export const { threadsErrorNoted, sortThreadsByMostRecent, sortThreadsByLeastRecent } = threadSlice.actions;
 
 export const selectThreadList = (state: RootState) => state.thread.threadList;
 
@@ -143,5 +165,13 @@ export const selectThreadByID = (ID: Number) => (state: RootState) => {
   );
   return res
     ? res
-    : { ID: 0, title: "", content: "", tag: "", author: "", CreatedAt: "", image: null };
+    : {
+        ID: 0,
+        title: "",
+        content: "",
+        tag: "",
+        author: "",
+        CreatedAt: "",
+        image: null,
+      };
 };

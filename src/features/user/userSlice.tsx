@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { get, post } from "../../api/requests";
 import { RootState } from "../../app/store";
 
@@ -47,8 +47,8 @@ const userSlice = createSlice({
       state.error = null;
     },
     userStatusCreateNoted(state) {
-      state.statusCreate = "idle"
-    }
+      state.statusCreate = "idle";
+    },
   },
   extraReducers(builder) {
     builder
@@ -115,5 +115,5 @@ const userSlice = createSlice({
 });
 
 export default userSlice.reducer;
-export const { userErrorNoted, userStatusCreateNoted } = userSlice.actions
+export const { userErrorNoted, userStatusCreateNoted } = userSlice.actions;
 export const selectUsername = (state: RootState) => state.user.username;

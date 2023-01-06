@@ -5,6 +5,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: url("./assets/background.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 code {
@@ -12,14 +15,26 @@ code {
     monospace;
 }
 
-.paperClass {
-  padding: 40px;
-  width: 400px;
-  height: 450px;
-  margin: 100px auto;
+h1 {
+  font-size: 64px;
+  font-weight: 700;
+  font-family: Georgia, 'Times New Roman', Times, serif;
   text-align: center;
+}
+
+h2, .DialogTitle, .CardHeader{
   font-size: 34px;
-  font-weight: bold;
+  font-weight: 400;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+p, .DialogContent, .CardContent{
+  font-size: 16px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.Paper {
+  background-color: rgb(230, 230, 217) !important;
 }
 
 .threadCardIconClass {

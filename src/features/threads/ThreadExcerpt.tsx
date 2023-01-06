@@ -37,12 +37,14 @@ export function ThreadExcerpt({
 }) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [editDialogOpen, setEditDialogOpen]: [boolean, Function] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen]: [boolean, Function] = useState(false);
+  const [editDialogOpen, setEditDialogOpen]: [boolean, Function] =
+    useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen]: [boolean, Function] =
+    useState(false);
 
   const currentUser: string = useAppSelector(selectUsername);
   return (
-    <Card key={thread.ID?.toString()} variant="elevation" elevation={10}>
+    <Card key={thread.ID?.toString()} variant="outlined" >
       <CardActionArea
         onClick={() => {
           dispatch(commentsStatusNoted());
@@ -57,7 +59,9 @@ export function ThreadExcerpt({
               </Avatar> //randomise color or base on username characters
             }
             title={thread.title}
-            subheader={thread.CreatedAt? timeToTimeAgo(thread.CreatedAt) : null}
+            subheader={
+              thread.CreatedAt ? timeToTimeAgo(thread.CreatedAt) : null
+            }
           />
           <Chip
             label={thread.tag}
@@ -73,11 +77,11 @@ export function ThreadExcerpt({
               height="100%"
               width="100%"
               image={thread.image}
-              alt="Thread Image"
+              alt={thread.title}
             />
           </Box>
         )}
-        <CardContent>{thread.content}</CardContent>
+        <CardContent className="CardContent">{thread.content}</CardContent>
       </CardActionArea>
       {currentUser === thread.author && (
         <CardActions disableSpacing>
@@ -105,11 +109,21 @@ export function ThreadExcerpt({
         create={false}
       />
       <Dialog open={deleteDialogOpen}>
-        <DialogTitle>Delete this Thread?</DialogTitle>
-        <DialogContent>This cannot be undone.</DialogContent>
+        <DialogTitle className="DialogTitle">Delete this Thread?</DialogTitle>
+        <DialogContent className="DialogContent">
+          This cannot be undone.
+        </DialogContent>
         <DialogActions>
-          <Button variant="contained" sx={{ bgcolor: "#ED4337" }} onClick={() => dispatch(deleteThread(thread))}>Yes</Button>
-          <Button variant="outlined" onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+          <Button
+            variant="contained"
+            sx={{ bgcolor: "#ED4337" }}
+            onClick={() => dispatch(deleteThread(thread))}
+          >
+            Yes
+          </Button>
+          <Button variant="outlined" onClick={() => setDeleteDialogOpen(false)}>
+            Cancel
+          </Button>
         </DialogActions>
       </Dialog>
     </Card>
