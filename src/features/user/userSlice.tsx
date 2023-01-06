@@ -16,6 +16,10 @@ export const login = createAsyncThunk(
   }
 );
 
+export const logout = createAsyncThunk("user/logout", async () => {
+  return await post("/logout");
+});
+
 export const register = createAsyncThunk(
   "user/register",
   async (user: { username: string; password: string }) => {
@@ -64,6 +68,21 @@ const userSlice = createSlice({
           ? action.error.message
           : "unknown error";
         state.username = "";
+      })
+      .addCase(logout.pending, (state, action) => {
+        state.error = null;
+        state.statusLog = "pending";
+      })
+      .addCase(logout.fulfilled, (state, action) => {
+        state.error = null;
+        state.statusLog = "logged out";
+        state.username = "";
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.statusLog = "logged in";
+        state.error = action.error.message
+          ? action.error.message
+          : "unknown error";
       })
       .addCase(register.pending, (state, action) => {
         state.error = null;
