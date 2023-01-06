@@ -44,7 +44,7 @@ export default function ThreadsList() {
     useState(false);
   const [threadList, setThreadList]: [Thread[], Function] = useState([]);
   const [tags, setTags]: [string[], Function] = useState([]);
-  const [recent, setRecent]: [string, Function] = useState("most recent");
+  const [recent, setRecent]: [string, Function] = useState("least recent");
   const fullThreadList = useAppSelector(selectThreadList);
   const threadsStatus: string = useAppSelector(
     (state: RootState) => state.thread.statusGet
@@ -212,10 +212,7 @@ export default function ThreadsList() {
           </Box>
         ) : (
           threadList.map((thread: Thread) => (
-            <ThreadExcerpt
-              key={thread.ID?.toString()}
-              thread={{ ...thread, content: thread.content.substring(0, 100) }}
-            />
+            <ThreadExcerpt key={thread.ID?.toString()} thread={thread} />
           ))
         )}
         <ThreadAdd

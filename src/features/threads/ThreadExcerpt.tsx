@@ -67,7 +67,7 @@ export function ThreadExcerpt({
           <Chip
             label={thread.tag}
             variant="outlined"
-            sx={{ margin: "20px", backgroundColor:stc(thread.tag)}}
+            sx={{ margin: "20px", backgroundColor: stc(thread.tag) }}
           />
         </Stack>
         {thread.image && (
@@ -81,7 +81,9 @@ export function ThreadExcerpt({
             />
           </Box>
         )}
-        <CardContent className="CardContent">{thread.content}</CardContent>
+        <CardContent className="CardContent">
+          {thread.content.substring(0, 100)}
+        </CardContent>
       </CardActionArea>
       {currentUser === thread.author && (
         <CardActions disableSpacing>
