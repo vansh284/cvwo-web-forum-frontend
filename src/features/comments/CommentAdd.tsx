@@ -32,7 +32,7 @@ export function CommentAdd({
   //Ensures that comment add is always up to date with comments
   useEffect(() => {
     setContent(comment.content);
-  }, [content]);
+  }, [comment]);
 
   return (
     <Dialog open={dialogOpen}>
@@ -89,7 +89,6 @@ export function CommentAdd({
             dispatch(
               create ? createComment(commentNew) : editComment(commentNew)
             );
-            setContent("");
             setDialogOpen(false);
           }}
           disabled={content.length === 0}

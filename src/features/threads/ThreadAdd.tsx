@@ -65,7 +65,7 @@ export function ThreadAdd({
             alignItems: "center",
           }}
         >
-          Create a New Thread
+          {create ? "Create a New Thread" : "Edit Thread"}
           <IconButton onClick={() => setDialogOpen(false)}>
             <CloseIcon />
           </IconButton>
@@ -164,10 +164,6 @@ export function ThreadAdd({
               dispatch(
                 create ? createThread(threadNew) : editThread(threadNew)
               );
-              setTitle("");
-              setContent("");
-              setTag("");
-              setImage(null);
               setDialogOpen(false);
             }}
             disabled={
@@ -185,8 +181,10 @@ export function ThreadAdd({
         onClose={() => setSnackbarOpen(false)}
       >
         <Alert onClose={() => setSnackbarOpen(false)} severity="error">
-          Failed to add thread. Maximum image size is 2.5 mb. Please compress
-          image.
+          {`Failed to ${
+            create ? "add" : "edit"
+          } thread. Maximum image size is 2.5 mb. Please compress
+          image.`}
         </Alert>
       </Snackbar>
     </>
