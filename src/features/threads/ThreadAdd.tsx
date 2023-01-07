@@ -181,10 +181,7 @@ export function ThreadAdd({
         onClose={() => setSnackbarOpen(false)}
       >
         <Alert onClose={() => setSnackbarOpen(false)} severity="error">
-          {`Failed to ${
-            create ? "add" : "edit"
-          } thread. Maximum image size is 2.5 mb. Please compress
-          image.`}
+          Maximum image size is 2.5 mb. Please compress image.
         </Alert>
       </Snackbar>
     </>
