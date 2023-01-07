@@ -9,7 +9,7 @@ import {
   IconButton,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../app/hooks";
 import { Comment, createComment, editComment } from "./commentSlice";
 import CloseIcon from "@mui/icons-material/Close";
@@ -28,6 +28,12 @@ export function CommentAdd({
 }) {
   const dispatch = useAppDispatch();
   const [content, setContent]: [string, Function] = useState(comment.content);
+
+  //Ensures that comment add is always up to date with comments
+  useEffect(() => {
+    setContent(comment.content);
+  }, [content]);
+
   return (
     <Dialog open={dialogOpen}>
       <DialogTitle
