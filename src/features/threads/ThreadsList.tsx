@@ -32,6 +32,7 @@ import { Box } from "@mui/system";
 import { ThreadExcerpt } from "./ThreadExcerpt";
 import { ThreadAdd } from "./ThreadAdd";
 import { getUser, logout, selectUsername } from "../user/userSlice";
+import logo from "../../assets/logo.svg";
 import stc from "string-to-color";
 
 export default function ThreadsList() {
@@ -121,7 +122,8 @@ export default function ThreadsList() {
             New Thread
           </Fab>
         </Tooltip>
-        <Button variant="outlined" onClick={() => setLogoutDialogOpen(true)}>
+        <img height="130px" width="150px" src={logo} alt="logo" style={{marginRight:"50px"}}/>
+        <Button style={{height:"50px"}} variant="outlined" onClick={() => setLogoutDialogOpen(true)}>
           Logout
         </Button>
         <Dialog open={logoutDialogOpen}>
@@ -149,7 +151,8 @@ export default function ThreadsList() {
         </Dialog>
       </Box>
       <Stack spacing={2}>
-        <h1>Threads</h1>
+        <h1>CVWO Web Forum</h1>
+        <h2 style={{fontSize:"44px"}}>Threads</h2>
         <Autocomplete
           multiple
           options={[
