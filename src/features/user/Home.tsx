@@ -18,6 +18,8 @@ import Tab from "@mui/material/Tab";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import logo from "../../assets/logo.svg";
+import Box from "@mui/system/Box/Box";
+import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 
 export default function Home() {
   const dispatch = useAppDispatch();
@@ -48,42 +50,56 @@ export default function Home() {
   }, [statusCreate]);
 
   return (
-    <Grid>
-      <Paper
-        elevation={10}
-        className="Paper"
-        sx={{
-          padding: "40px",
-          width: "520px",
-          height: "700px",
-          margin: "100px auto",
-          textAlign: "center",
-        }}
-      >
-        <h2 style={{fontWeight:"700"}}>Welcome to the Web Forum!</h2>
-        <Tabs
-          value={currentTab}
-          onChange={(_: React.SyntheticEvent, newTab: number) =>
-            setCurrentTab(newTab)
-          }
-          centered
+    <>
+      {statusLog === "pending" ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "350px 0",
+          }}
         >
-          <Tab label="Login" />
-          <Tab label="Register" />
-        </Tabs>
-        {currentTab === 0 && <Login />}
-        {currentTab === 1 && <Register />}
-      </Paper>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setSnackbarOpen(false)}
-      >
-        <MuiAlert onClose={() => setSnackbarOpen(false)} severity="success">
-          Account Registered!
-        </MuiAlert>
-      </Snackbar>
-    </Grid>
+          <CircularProgress size={150} />
+        </Box>
+      ) : (
+        <Grid>
+          <Paper
+            elevation={10}
+            className="Paper"
+            sx={{
+              padding: "40px",
+              width: "520px",
+              height: "700px",
+              margin: "100px auto",
+              textAlign: "center",
+            }}
+          >
+            <h2 style={{ fontWeight: "700" }}>Welcome to the Web Forum!</h2>
+            <Tabs
+              value={currentTab}
+              onChange={(_: React.SyntheticEvent, newTab: number) =>
+                setCurrentTab(newTab)
+              }
+              centered
+            >
+              <Tab label="Login" />
+              <Tab label="Register" />
+            </Tabs>
+            {currentTab === 0 && <Login />}
+            {currentTab === 1 && <Register />}
+          </Paper>
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={6000}
+            onClose={() => setSnackbarOpen(false)}
+          >
+            <MuiAlert onClose={() => setSnackbarOpen(false)} severity="success">
+              Account Registered!
+            </MuiAlert>
+          </Snackbar>
+        </Grid>
+      )}
+    </>
   );
 }
 
@@ -96,7 +112,12 @@ function Login() {
   return (
     <Stack spacing={2}>
       <img
-        style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginTop:"20px" }}
+        style={{
+          display: "block",
+          marginLeft: "auto",
+          marginRight: "auto",
+          marginTop: "20px",
+        }}
         height="130px"
         width="150px"
         src={logo}
@@ -176,7 +197,12 @@ function Register() {
   return (
     <Stack spacing={2}>
       <img
-        style={{ display: "block", marginLeft: "auto", marginRight: "auto", marginTop:"20px" }}
+        style={{
+          display: "block",
+          marginLeft: "auto",
+          marginRight: "auto",
+          marginTop: "20px",
+        }}
         height="130px"
         width="150px"
         src={logo}
