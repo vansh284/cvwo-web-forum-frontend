@@ -43,7 +43,7 @@ export default function ThreadsList() {
     useState(false);
   const [threadList, setThreadList]: [Thread[], Function] = useState([]);
   const [tags, setTags]: [string[], Function] = useState([]);
-  const [recent, setRecent]: [string, Function] = useState("least recent");
+  const [recent, setRecent]: [string, Function] = useState("most recent");
   const fullThreadList = useAppSelector(selectThreadList);
   const threadsStatus: string = useAppSelector(
     (state) => state.thread.statusGet
@@ -76,6 +76,13 @@ export default function ThreadsList() {
     }
     setThreadList(fullThreadList);
   }, [threadsStatus, threadsError, fullThreadList, dispatch]);
+
+  //Sorts threadlist by most recent initially
+  useEffect(() => {
+    if (threadsStatus === "success") {
+      dispatch(sortThreadsByMostRecent());
+    }
+  }, [threadsStatus, dispatch]);
 
   //Modifies threadlist everytime tags is updated
   useEffect(() => {
