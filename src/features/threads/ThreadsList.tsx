@@ -47,10 +47,10 @@ export default function ThreadsList() {
   const [recent, setRecent]: [string, Function] = useState("least recent");
   const fullThreadList = useAppSelector(selectThreadList);
   const threadsStatus: string = useAppSelector(
-    (state: RootState) => state.thread.statusGet
+    (state) => state.thread.statusGet
   );
   const threadsError: string | null = useAppSelector(
-    (state: RootState) => state.thread.error
+    (state) => state.thread.error
   );
   const currentUser: string = useAppSelector(selectUsername);
   const statusLog: string = useAppSelector((state) => state.user.statusLog);

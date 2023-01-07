@@ -8,14 +8,13 @@ import {
   userStatusCreateNoted,
 } from "./userSlice";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import { Paper } from "@mui/material";
+import { Alert, Paper } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import logo from "../../assets/logo.svg";
 import Box from "@mui/system/Box/Box";
@@ -93,9 +92,9 @@ export default function Home() {
             autoHideDuration={6000}
             onClose={() => setSnackbarOpen(false)}
           >
-            <MuiAlert onClose={() => setSnackbarOpen(false)} severity="success">
+            <Alert onClose={() => setSnackbarOpen(false)} severity="success">
               Account Registered!
-            </MuiAlert>
+            </Alert>
           </Snackbar>
         </Grid>
       )}

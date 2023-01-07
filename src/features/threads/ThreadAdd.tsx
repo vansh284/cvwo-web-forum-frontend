@@ -5,10 +5,15 @@ import TextField from "@mui/material/TextField";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
-import { Autocomplete, DialogActions } from "@mui/material";
-import { useState } from "react";
+import { Alert, Autocomplete, DialogActions, Snackbar } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { createThread, editThread, Thread } from "./threadSlice";
+import {
+  createThread,
+  editThread,
+  Thread,
+  threadsErrorNoted,
+} from "./threadSlice";
 import Delete from "@mui/icons-material/Delete";
 
 export function ThreadAdd({
@@ -29,124 +34,150 @@ export function ThreadAdd({
   const [image, setImage]: [string | null, Function] = useState<string | null>(
     thread.image
   );
+  const [snackbarOpen, setSnackbarOpen]: [boolean, Function] = useState(false);
+  const threadsError: string | null = useAppSelector(
+    (state) => state.thread.error
+  );
+  useEffect(() => {
+    if (threadsError !== null) {
+      setSnackbarOpen(true);
+      dispatch(threadsErrorNoted());
+    }
+  });
   return (
-    <Dialog open={dialogOpen}>
-      <DialogTitle
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        Create a New Thread
-        <IconButton onClick={() => setDialogOpen(false)}>
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-      <DialogContent>
-        <TextField
-          autoFocus
-          margin="dense"
-          label="Title"
-          type="text"
-          fullWidth
-          variant="outlined"
-          value={title}
-          onChange={(
-            e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-          ) => setTitle(e.target.value)}
-          required
-        />
-
-        <Autocomplete
-          options={[
-            "Education",
-            "Work",
-            "Social Life",
-            "Philosophy",
-            "Culture",
-            "Politics",
-            "Miscellaneous",
-          ]}
-          value={tag}
-          onChange={(_, newTag: string | null) => setTag(newTag)}
-          disablePortal
-          renderInput={(params) => <TextField {...params} label="Tag" />}
-          fullWidth
-        />
-        <TextField
-          autoFocus
-          margin="dense"
-          label="Content"
-          type="text"
-          fullWidth
-          variant="outlined"
-          value={content}
-          onChange={(
-            e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-          ) => setContent(e.target.value)}
-          multiline
-          minRows={3}
-          required
-        />
-        <Button
-          sx={{ marginTop: "10px", marginBottom: "10px" }}
-          variant="outlined"
-          component="label"
-        >
-          <input
-            accept="image/*"
-            hidden
-            type="file"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              if (e.target.files) {
-                const reader = new FileReader();
-                reader.addEventListener("load", () =>
-                  setImage(
-                    typeof reader.result === "string" ? reader.result : null
-                  )
-                );
-                reader.readAsDataURL(e.target.files[0]);
-              }
-            }}
-          />
-          Upload Image
-        </Button>
-        <IconButton sx={{ color: "#ED4337" }} onClick={() => setImage(null)}>
-          <Delete />
-        </IconButton>
-        <br />
-        {image && <img src={image} width={400} height={"auto"} />}
-      </DialogContent>
-      <DialogActions>
-        <Button
-          variant="contained"
-          onClick={() => {
-            const threadNew: Thread = {
-              ID: thread.ID,
-              CreatedAt: thread.CreatedAt,
-              title: title,
-              tag: tag,
-              content: content,
-              author: thread.author,
-              image: image,
-            };
-
-            dispatch(create ? createThread(threadNew) : editThread(threadNew));
-            setTitle("");
-            setContent("");
-            setTag("");
-            setImage(null);
-            setDialogOpen(false);
+    <>
+      <Dialog open={dialogOpen}>
+        <DialogTitle
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
-          disabled={
-            title.length === 0 || content.length === 0 || tag.length === 0
-          }
-          fullWidth
         >
-          Post
-        </Button>
-      </DialogActions>
-    </Dialog>
+          Create a New Thread
+          <IconButton onClick={() => setDialogOpen(false)}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Title"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={title}
+            onChange={(
+              e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+            ) => setTitle(e.target.value)}
+            required
+          />
+
+          <Autocomplete
+            options={[
+              "Education",
+              "Work",
+              "Social Life",
+              "Philosophy",
+              "Culture",
+              "Politics",
+              "Miscellaneous",
+            ]}
+            value={tag}
+            onChange={(_, newTag: string | null) => setTag(newTag)}
+            disablePortal
+            renderInput={(params) => (
+              <TextField {...params} required label="Tag" />
+            )}
+            fullWidth
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Content"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={content}
+            onChange={(
+              e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+            ) => setContent(e.target.value)}
+            multiline
+            minRows={3}
+            required
+          />
+          <Button
+            sx={{ marginTop: "10px", marginBottom: "10px" }}
+            variant="outlined"
+            component="label"
+          >
+            <input
+              accept="image/*"
+              hidden
+              type="file"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                if (e.target.files) {
+                  const reader = new FileReader();
+                  reader.addEventListener("load", () =>
+                    setImage(
+                      typeof reader.result === "string" ? reader.result : null
+                    )
+                  );
+                  reader.readAsDataURL(e.target.files[0]);
+                }
+              }}
+            />
+            Upload Image (maximum size 1mb)
+          </Button>
+          <IconButton sx={{ color: "#ED4337" }} onClick={() => setImage(null)}>
+            <Delete />
+          </IconButton>
+          <br />
+          {image && <img src={image} width={400} height={"auto"} />}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            onClick={() => {
+              const threadNew: Thread = {
+                ID: thread.ID,
+                CreatedAt: thread.CreatedAt,
+                title: title,
+                tag: tag,
+                content: content,
+                author: thread.author,
+                image: image,
+              };
+
+              dispatch(
+                create ? createThread(threadNew) : editThread(threadNew)
+              );
+              setTitle("");
+              setContent("");
+              setTag("");
+              setImage(null);
+              setDialogOpen(false);
+            }}
+            disabled={
+              title.length === 0 || content.length === 0 || tag.length === 0
+            }
+            fullWidth
+          >
+            Post
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert onClose={() => setSnackbarOpen(false)} severity="error">
+          Failed to add thread. Maximum image size is 1 mb. Please compress
+          image.
+        </Alert>
+      </Snackbar>
+    </>
   );
 }
