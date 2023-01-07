@@ -181,7 +181,7 @@ export function ThreadAdd({
         onClose={() => setSnackbarOpen(false)}
       >
         <Alert onClose={() => setSnackbarOpen(false)} severity="error">
-          Maximum image size is 2.5 mb. Please compress image.
+          Maximum image size is 2.5MB. Please compress image.
         </Alert>
       </Snackbar>
     </>
