@@ -43,7 +43,7 @@ export function ThreadAdd({
       setSnackbarOpen(true);
       dispatch(threadsErrorNoted());
     }
-  });
+  }, [threadsError, dispatch]);
   return (
     <>
       <Dialog open={dialogOpen}>
@@ -134,7 +134,7 @@ export function ThreadAdd({
             <Delete />
           </IconButton>
           <br />
-          {image && <img src={image} width={400} height={"auto"} />}
+          {image && <img src={image} alt={title} width={400} height={"auto"} />}
         </DialogContent>
         <DialogActions>
           <Button

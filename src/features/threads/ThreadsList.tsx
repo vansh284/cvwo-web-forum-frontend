@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { RootState } from "../../app/store";
 import {
   getThreadList,
   selectThreadList,
@@ -60,7 +59,7 @@ export default function ThreadsList() {
     if (statusLog === "logged out") {
       dispatch(getUser());
     }
-  });
+  }, [statusLog, dispatch]);
 
   //Autodirect users not logged in to the home page
   useEffect(() => {
@@ -68,7 +67,7 @@ export default function ThreadsList() {
       navigate("/", { replace: true });
       dispatch(threadsErrorNoted());
     }
-  });
+  }, [statusLog, dispatch, navigate]);
 
   //Gets the full thread list
   useEffect(() => {
@@ -76,7 +75,7 @@ export default function ThreadsList() {
       dispatch(getThreadList());
     }
     setThreadList(fullThreadList);
-  }, [threadsStatus, threadsError, fullThreadList]);
+  }, [threadsStatus, threadsError, fullThreadList, dispatch]);
 
   //Modifies threadlist everytime tags is updated
   useEffect(() => {

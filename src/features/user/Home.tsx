@@ -34,19 +34,19 @@ export default function Home() {
 
   useEffect(() => {
     dispatch(getUser());
-  }, []);
+  }, [dispatch]);
   useEffect(() => {
     if (statusLog === "logged in") {
       navigate("/threads", { replace: true });
     }
-  }, [statusLog]);
+  }, [statusLog, navigate]);
   useEffect(() => {
     if (statusCreate === "success") {
       setSnackbarOpen(true);
       setCurrentTab(0);
       dispatch(userStatusCreateNoted());
     }
-  }, [statusCreate]);
+  }, [statusCreate, dispatch]);
 
   return (
     <>
