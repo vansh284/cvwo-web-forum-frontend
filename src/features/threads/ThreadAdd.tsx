@@ -38,12 +38,23 @@ export function ThreadAdd({
   const threadsError: string | null = useAppSelector(
     (state) => state.thread.error
   );
+
+  //Throws error if image is too large
   useEffect(() => {
     if (threadsError !== null) {
       setSnackbarOpen(true);
       dispatch(threadsErrorNoted());
     }
   }, [threadsError, dispatch]);
+
+  //Ensures that threadAdd is always up to date with the threads
+  useEffect(() => {
+    setTitle(thread.title);
+    setTag(thread.tag);
+    setContent(thread.content);
+    setImage(thread.image);
+  }, [thread]);
+
   return (
     <>
       <Dialog open={dialogOpen}>
@@ -128,7 +139,7 @@ export function ThreadAdd({
                 }
               }}
             />
-            Upload Image (maximum size 1mb)
+            Upload Image (maximum size 2.5mb)
           </Button>
           <IconButton sx={{ color: "#ED4337" }} onClick={() => setImage(null)}>
             <Delete />
@@ -174,7 +185,7 @@ export function ThreadAdd({
         onClose={() => setSnackbarOpen(false)}
       >
         <Alert onClose={() => setSnackbarOpen(false)} severity="error">
-          Failed to add thread. Maximum image size is 1 mb. Please compress
+          Failed to add thread. Maximum image size is 2.5 mb. Please compress
           image.
         </Alert>
       </Snackbar>
