@@ -21,6 +21,7 @@
 
 ```
 $ git clone https://github.com/vansh284/cvwo-web-forum-frontend
+$ cd ./cvwo-web-forum-frontend
 $ npm install
 # npm start
 ```
