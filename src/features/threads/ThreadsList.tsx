@@ -99,10 +99,13 @@ export default function ThreadsList() {
   return (
     <Paper
       sx={{
-        margin: "100px 300px",
+        margin: "100px auto",
         padding: "50px",
+        width: "0.5",
+        minWidth:"300px"
       }}
       variant="elevation"
+      square
       elevation={10}
       className="Paper"
     >

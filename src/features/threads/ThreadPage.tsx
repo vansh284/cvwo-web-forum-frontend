@@ -35,7 +35,7 @@ export function ThreadPage() {
   useEffect(() => {
     dispatch(getUser());
   }, [dispatch]);
-  
+
   //Get the threads
   useEffect(() => {
     if (threadsStatus === "idle") {
@@ -55,7 +55,13 @@ export function ThreadPage() {
     <Paper
       variant="elevation"
       elevation={10}
-      sx={{ margin: "100px 300px 100px 300px", padding: "20px 50px 20px 50px" }}
+      sx={{
+        margin: "100px auto",
+        padding: "50px",
+        width: "0.5",
+        minWidth: "300px",
+      }}
+      square
       className="Paper"
     >
       <ThreadView thread={thread} />
