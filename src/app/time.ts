@@ -1,3 +1,4 @@
+// Helper function which converts the time in the format provided by the API to 'time ago'
 export function timeToTimeAgo(time: string): string {
   const now: Date = new Date();
   const created: Date = new Date(time);

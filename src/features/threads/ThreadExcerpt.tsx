@@ -42,8 +42,8 @@ export function ThreadExcerpt({
     useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen]: [boolean, Function] =
     useState(false);
-
   const currentUser: string = useAppSelector(selectUsername);
+
   return (
     <Card key={thread.ID?.toString()} variant="outlined">
       <CardActionArea
@@ -55,9 +55,10 @@ export function ThreadExcerpt({
         <Stack direction="row">
           <CardHeader
             avatar={
+              // stc package used to randomise avatar color based on username
               <Avatar sx={{ bgcolor: stc(thread.author) }}>
                 {thread.author.substring(0, 1).toUpperCase()}
-              </Avatar> //randomise color or base on username characters
+              </Avatar>
             }
             title={thread.title}
             subheader={

@@ -13,10 +13,10 @@ export interface Thread {
 }
 
 export interface ThreadListState {
-  threadList: Thread[];
-  statusGet: "idle" | "pending" | "success";
-  statusUpdate: "idle" | "pending" | "success";
-  error: null | string;
+  threadList: Thread[]; // Array of threads
+  statusGet: "idle" | "pending" | "success"; // Status of GET threads request
+  statusUpdate: "idle" | "pending" | "success"; // Status of POST/PUT threads request
+  error: null | string; // Errors of threads requests
 }
 
 export const getThreadList = createAsyncThunk(
@@ -27,7 +27,6 @@ export const getThreadList = createAsyncThunk(
 );
 
 export const createThread = createAsyncThunk(
-  // this implementation assumes that there is a rerender whenever threadliststate changes (state.statusget is made idle upon success in the reducer below)
   "thread/createThread",
   async (thread: Thread) => {
     return await post("/threads", thread);
@@ -59,6 +58,7 @@ const threadSlice = createSlice({
   name: "thread",
   initialState: initialState,
   reducers: {
+    // Reset the error for the request once system has noted it.
     threadsErrorNoted(state) {
       state.error = null;
     },
@@ -155,13 +155,17 @@ const threadSlice = createSlice({
 
 export default threadSlice.reducer;
 
-export const { threadsErrorNoted, sortThreadsByMostRecent, sortThreadsByLeastRecent } = threadSlice.actions;
+export const {
+  threadsErrorNoted,
+  sortThreadsByMostRecent,
+  sortThreadsByLeastRecent,
+} = threadSlice.actions;
 
 export const selectThreadList = (state: RootState) => state.thread.threadList;
 
 export const selectThreadByID = (ID: Number) => (state: RootState) => {
   const res: Thread | undefined = state.thread.threadList.find(
-    (element) => element.ID == ID
+    (element) => element.ID === ID
   );
   return res
     ? res

@@ -39,7 +39,7 @@ export function ThreadAdd({
     (state) => state.thread.error
   );
 
-  //Throws error if image is too large
+  // Opens an error snackbar if image is too large
   useEffect(() => {
     if (threadsError !== null) {
       setSnackbarOpen(true);
@@ -47,7 +47,7 @@ export function ThreadAdd({
     }
   }, [threadsError, dispatch]);
 
-  //Ensures that threadAdd is always up to date with the threads
+  // Ensures that ThreadAdd is always up to date with the current thread
   useEffect(() => {
     setTitle(thread.title);
     setTag(thread.tag);

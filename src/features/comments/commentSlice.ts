@@ -11,10 +11,10 @@ export interface Comment {
 }
 
 export interface CommentListState {
-  commentList: Comment[];
-  statusGet: "idle" | "pending" | "success";
-  statusUpdate: "idle" | "pending" | "success";
-  error: null | string;
+  commentList: Comment[]; // Array of comments
+  statusGet: "idle" | "pending" | "success"; // Status of GET comments request
+  statusUpdate: "idle" | "pending" | "success"; // Status of POST/PUT comments request
+  error: null | string; // Errors of comments requests
 }
 
 export const getCommentList = createAsyncThunk(
@@ -25,7 +25,6 @@ export const getCommentList = createAsyncThunk(
 );
 
 export const createComment = createAsyncThunk(
-  // this implementation assumes that there is a rerender whenever commentliststate changes (state.statusget is made idle upon success in the reducer below)
   "comment/createComment",
   async (comment: Comment) => {
     return await post("/threads/" + comment.thread_id + "/comments", comment);
@@ -61,10 +60,13 @@ const initialState: CommentListState = {
 const commentSlice = createSlice({
   name: "comment",
   initialState: initialState,
-  reducers: {commentsStatusNoted(state) {
-    state.statusGet = "idle"
-    state.statusUpdate = "idle"
-  }},
+  reducers: {
+    // Resets the comments status to idle once the system has noted the success.
+    commentsStatusNoted(state) {
+      state.statusGet = "idle";
+      state.statusUpdate = "idle";
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(getCommentList.pending, (state, action) => {
@@ -134,7 +136,7 @@ const commentSlice = createSlice({
 });
 
 export default commentSlice.reducer;
-export const { commentsStatusNoted } = commentSlice.actions
+export const { commentsStatusNoted } = commentSlice.actions;
 
 export const selectCommentList = (state: RootState) =>
   state.comment.commentList;

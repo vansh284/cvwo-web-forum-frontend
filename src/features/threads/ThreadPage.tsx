@@ -34,13 +34,14 @@ export function ThreadPage() {
   //Log user in
   useEffect(() => {
     dispatch(getUser());
-  });
+  }, [dispatch]);
+  
   //Get the threads
   useEffect(() => {
     if (threadsStatus === "idle") {
       dispatch(getThreadList());
     }
-  }, [threadsStatus, threadsError]);
+  }, [threadsStatus, threadsError, dispatch]);
 
   // Autodirect users not logged in to the home page
   useEffect(() => {

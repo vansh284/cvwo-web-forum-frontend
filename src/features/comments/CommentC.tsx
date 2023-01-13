@@ -35,6 +35,7 @@ export function CommentC({ comment }: { comment: Comment }) {
     <>
       <Grid container spacing={2} wrap="nowrap" key={comment.ID?.toString()}>
         <Grid item sx={{ marginTop: "10px" }}>
+          {/* stc package used to randomise avatar color based on username */}
           <Avatar sx={{ bgcolor: stc(comment.author) }}>
             {comment.author.substring(0, 1).toUpperCase()}
           </Avatar>

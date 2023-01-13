@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, Divider, Paper } from "@mui/material";
+import { Box, Button, CircularProgress, Divider } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { RootState } from "../../app/store";
@@ -19,12 +19,12 @@ export function CommentList({ ID }: { ID: Number }) {
   const dispatch = useAppDispatch();
   const [commentOpen, setCommentOpen] = useState(false);
 
-  //Get the comments
+  // Get the comments
   useEffect(() => {
     if (commentsStatus === "idle") {
       dispatch(getCommentList(ID));
     }
-  }, [commentsStatus, commentsError]);
+  }, [commentsStatus, commentsError, ID, dispatch]);
 
   return (
     <>

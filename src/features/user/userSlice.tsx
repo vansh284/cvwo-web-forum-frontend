@@ -3,10 +3,10 @@ import { get, post } from "../../api/requests";
 import { RootState } from "../../app/store";
 
 export interface UserState {
-  username: string;
-  statusLog: "logged in" | "pending" | "logged out";
-  statusCreate: "idle" | "pending" | "success";
-  error: null | string;
+  username: string; // Username of user currently logged in
+  statusLog: "logged in" | "pending" | "logged out"; // Status of POST log in/log out requeest
+  statusCreate: "idle" | "pending" | "success"; // Status of POST register request
+  error: null | string; // Errors of login/logout/register requests
 }
 
 export const login = createAsyncThunk(
@@ -43,9 +43,11 @@ const userSlice = createSlice({
   name: "user",
   initialState: initialState,
   reducers: {
+    // Reset the error for the request once system has noted it.
     userErrorNoted(state) {
       state.error = null;
     },
+    // Resets the create user status to idle once the system has noted the success.
     userStatusCreateNoted(state) {
       state.statusCreate = "idle";
     },

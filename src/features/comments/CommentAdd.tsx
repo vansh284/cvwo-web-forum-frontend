@@ -29,7 +29,7 @@ export function CommentAdd({
   const dispatch = useAppDispatch();
   const [content, setContent]: [string, Function] = useState(comment.content);
 
-  //Ensures that comment add is always up to date with comments
+  // Ensures that CommentAdd is always up to date with current comment
   useEffect(() => {
     setContent(comment.content);
   }, [comment]);

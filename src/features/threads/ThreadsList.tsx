@@ -42,10 +42,10 @@ export default function ThreadsList() {
     useState(false);
   const [logoutDialogOpen, setLogoutDialogOpen]: [boolean, Function] =
     useState(false);
-  const [threadList, setThreadList]: [Thread[], Function] = useState([]);
-  const [tags, setTags]: [string[], Function] = useState([]);
-  const [recent, setRecent]: [string, Function] = useState("most recent");
-  const fullThreadList = useAppSelector(selectThreadList);
+  const [tags, setTags]: [string[], Function] = useState([]); // Keep track of tags to filter by
+  const [recent, setRecent]: [string, Function] = useState("most recent"); // Keep track of how to sort threads
+  const [threadList, setThreadList]: [Thread[], Function] = useState([]); // The threads to currently display to user
+  const fullThreadList = useAppSelector(selectThreadList); // The entire list of threads
   const threadsStatus: string = useAppSelector(
     (state) => state.thread.statusGet
   );
@@ -55,14 +55,14 @@ export default function ThreadsList() {
   const currentUser: string = useAppSelector(selectUsername);
   const statusLog: string = useAppSelector((state) => state.user.statusLog);
 
-  //Log user in
+  // Log user in
   useEffect(() => {
     if (statusLog === "logged out") {
       dispatch(getUser());
     }
   }, [statusLog, dispatch]);
 
-  //Autodirect users not logged in to the home page
+  // Autodirect users not logged in to the home page
   useEffect(() => {
     if (statusLog === "logged out") {
       navigate("/", { replace: true });
@@ -70,7 +70,7 @@ export default function ThreadsList() {
     }
   }, [statusLog, dispatch, navigate]);
 
-  //Gets the full thread list
+  // Gets the full thread list
   useEffect(() => {
     if (threadsStatus === "idle") {
       dispatch(getThreadList());
@@ -78,14 +78,14 @@ export default function ThreadsList() {
     setThreadList(fullThreadList);
   }, [threadsStatus, threadsError, fullThreadList, dispatch]);
 
-  //Sorts threadlist by most recent initially
+  // Sorts threadlist by most recent initially
   useEffect(() => {
     if (threadsStatus === "success") {
       dispatch(sortThreadsByMostRecent());
     }
   }, [threadsStatus, dispatch]);
 
-  //Modifies threadlist everytime tags is updated
+  // Modifies threadlist everytime tags is updated
   useEffect(() => {
     tags.length > 0
       ? setThreadList(

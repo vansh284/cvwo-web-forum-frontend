@@ -23,23 +23,26 @@ import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 export default function Home() {
   const dispatch = useAppDispatch();
   const navigate: NavigateFunction = useNavigate();
-
   const [currentTab, setCurrentTab] = useState(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-
   const statusLog: string = useAppSelector((state) => state.user.statusLog);
   const statusCreate: string = useAppSelector(
     (state) => state.user.statusCreate
   );
 
+  // Checks if the user is already logged in when first loading on to the page
   useEffect(() => {
     dispatch(getUser());
   }, [dispatch]);
+
+  // Auto directs users logged in to the threads page
   useEffect(() => {
     if (statusLog === "logged in") {
       navigate("/threads", { replace: true });
     }
   }, [statusLog, navigate]);
+
+  // Opens a success snackbar if account is successfully registered
   useEffect(() => {
     if (statusCreate === "success") {
       setSnackbarOpen(true);
