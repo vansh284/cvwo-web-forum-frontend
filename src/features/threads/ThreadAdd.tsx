@@ -15,6 +15,7 @@ import {
   threadsErrorNoted,
 } from "./threadSlice";
 import Delete from "@mui/icons-material/Delete";
+import Tooltip from "@mui/material/Tooltip/Tooltip";
 
 export function ThreadAdd({
   dialogOpen,
@@ -141,9 +142,14 @@ export function ThreadAdd({
             />
             Upload Image (maximum size 2.5mb)
           </Button>
-          <IconButton sx={{ color: "#ED4337" }} onClick={() => setImage(null)}>
-            <Delete />
-          </IconButton>
+          <Tooltip title="Remove image">
+            <IconButton
+              sx={{ color: "#ED4337" }}
+              onClick={() => setImage(null)}
+            >
+              <Delete />
+            </IconButton>
+          </Tooltip>
           <br />
           {image && <img src={image} alt={title} width={400} height={"auto"} />}
         </DialogContent>
