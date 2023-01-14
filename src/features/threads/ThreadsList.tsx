@@ -154,7 +154,7 @@ export default function ThreadsList() {
         </Dialog>
       </Box>
       <Stack spacing={2}>
-        <h1>CVWO Web Forum</h1>
+        <h1>Gossip with Go</h1>
         <h2 style={{fontSize:"44px"}}>Threads</h2>
         <Autocomplete
           multiple

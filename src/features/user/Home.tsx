@@ -76,7 +76,7 @@ export default function Home() {
               textAlign: "center",
             }}
           >
-            <h2 style={{ fontWeight: "700" }}>Welcome to the Web Forum!</h2>
+            <h2 style={{ fontWeight: "700" }}>Welcome to Gossip with Go!</h2>
             <Tabs
               value={currentTab}
               onChange={(_: React.SyntheticEvent, newTab: number) =>
